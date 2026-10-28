@@ -1,0 +1,16 @@
+# raw / large data stays out of Git (manifests only)
+data/raw/
+data/external/
+*.edf
+*.mat
+*.h5
+*.npy
+*.npz
+outputs/*
+!outputs/.gitkeep
+
+# python
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+.env
