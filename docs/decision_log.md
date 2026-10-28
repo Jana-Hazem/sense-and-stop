@@ -27,3 +27,9 @@ Three complementary sources are used in a computational study. They are not a sy
 ## D5: No clinical claims
 
 No document, code, or commit message claims diagnosis, detection, or treatment of migraine.
+
+## D6: 1D PDE to cortical-source mapping (open)
+
+- The PDE model uses a one-dimensional spatial grid, while the MNE forward model uses cortical-surface source locations.
+- Owners: Members 3 and 4. Agree and document the mapping rule, units, coordinate transforms, source orientation convention, and array shapes before the interface is frozen.
+- Until resolved, do not assume that the lead field `H` directly accepts the PDE grid. Record the chosen representation and its limitations when the team decides.
