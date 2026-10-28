@@ -23,7 +23,9 @@ Raw data is never committed. See `data/MANIFEST.md`.
 
 ## Repository layout
 `docs/` · `data/` (manifests only) · `configs/` · `src/{data,model,forward,inverse,control}/` ·
-`notebooks/` · `outputs/`
+`notebooks/` · `reports/` (literature review and future report documents) · `outputs/`
+
+The current literature review is in [`reports/literature_review/`](reports/literature_review/README.md).
 
 ## Team responsibilities
 | Member | Name | Role |
