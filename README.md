@@ -28,12 +28,12 @@ Raw data is never committed. See `data/MANIFEST.md`.
 ## Team responsibilities
 | Member | Name | Role |
 |---|---|---|
-| 1 | [name] | Project and data lead |
-| 2 | [name] | Experimental CSD data steward |
-| 3 | [name] | PDE and numerical model lead |
-| 4 | [name] | Forward sensing and EEG lead |
-| 5 | [name] | Inverse problem lead |
-| 6 | [name] | Integration, docs, control extension |
+| 1 | Jana H | Project and data lead |
+| 2 | Suty | Experimental CSD data steward |
+| 3 | Ganna | PDE and numerical model lead |
+| 4 | Jana M | Forward sensing and EEG lead |
+| 5 | Jana W | Inverse problem lead |
+| 6 | Habiba | Integration, docs, control extension |
 
 ## Setup
 Member 6 owns the environment file. Placeholder until it exists.
