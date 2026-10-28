@@ -2,6 +2,8 @@
 data/raw/
 data/external/
 *.edf
+*.smr
+*.smrx
 *.mat
 *.h5
 *.npy
