@@ -17,12 +17,12 @@ This table records each data field, its units, dimensions, and provenance. `TBD`
 
 | Field | Meaning | Unit | Dimensions | Sampling rate | Provenance | Status |
 |---|---|---|---|---|---|---|
-| DC potential channels | Cortical DC potential during CSD | TBD | TBD | TBD | S1 file header and Pomierny et al. (2025) | TBD |
-| Laser Doppler channel | Capillary blood-flow measurement | TBD | TBD | TBD | S1 file header and Pomierny et al. (2025) | TBD |
-| Electrode layout | Recording positions on cortex | TBD (do not assume mm) | TBD | n/a | Paper methods | TBD (key unknown) |
-| Group label | Saline or zolpidem | Categorical | Per file | n/a | File name / RepOD description | Known from page |
-| KCl application schedule / event times | CSD induction schedule and recorded event times | Schedule reported as every 15 min; actual times TBD | TBD | n/a | Repository description / paper; confirm actual file timing | Partly known |
-| Missing data / artifacts | Gaps, drift, clipping | n/a | n/a | n/a | Member 2 exclusion log | TBD |
+| DC potential channels | Cortical DC potential during CSD | ADC volts ($\pm 5\text{ V}$, $0.0001526\text{ V/bit}$ before gain; normalize per animal) | 1 site (M1, right side) | $10{,}000\text{ Hz}$ (`CSD-DC`) | S1 file header and Pomierny et al. (2025) | Verified for `26032024_Z_R4.smr` |
+| Laser Doppler channel | Capillary blood-flow measurement | ADC volts (flux in arbitrary units per paper) | 1 probe ($250\text{--}300\ \mu\text{m}$ rostral to DC) | $1{,}000\text{ Hz}$ (`doppler`) | S1 file header and Pomierny et al. (2025) | Verified for `26032024_Z_R4.smr` |
+| Electrode layout | Recording positions on cortex | AP coordinates in mm (visual to M1 $\sim 6.5\text{ mm}$) | 1D spatial points | n/a | Paper methods | Partially verified (AP distance clear, DV/ML garbled in paper) |
+| Group label | Saline or zolpidem | Categorical | Per file ($n=6$ per group, 12 files total) | n/a | File name / RepOD description | Known from page (2 unreviewed files mapped to saline R2 & R6) |
+| KCl application schedule / event times | CSD induction schedule and recorded event times | Schedule reported as every 15 min; actual times typed at $1174, 2089, 3010, 3913, 4780, 5698, 6561, 7362\text{ s}$ | Event timestamps | n/a | Repository description / paper; confirm actual file timing (S1 Keyboard channel) | Verified for `26032024_Z_R4.smr` (typed ASCII key codes; markers don't align precisely with wave arrivals) |
+| Missing data / artifacts | Gaps, drift, clipping | n/a | Time windows | n/a | Member 2 exclusion log | Verified (Excluded: $0\text{--}2\text{ min}$ insertion saturation, $0\text{--}18\text{ min}$ drift/amp offset shift, $79.7\text{ min}$ KCl spike, $>145.6\text{ min}$ post-mortem saturation) |
 
 Known from the repository description: Spike2 format (`.smr` / `.smrx`), rat recordings, CSD induced with 1 M KCl (5 µL). Do not treat the stated application schedule as verified event timestamps in a particular recording.
 
