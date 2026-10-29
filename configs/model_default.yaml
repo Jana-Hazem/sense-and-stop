@@ -1,0 +1,73 @@
+# Sense & Stop - Member 3 - PDE model configuration  (v0.2, calibrated to S1 preliminary data)
+#
+# Provenance tags used on every value:
+#   [S1-measured]     measured by Member 2 from the RepOD rat CSD recordings (3 animals, 15 waves,
+#                     PRELIMINARY).  RAT data, NOT human.
+#   [lit-derived]     literature speed (Sci Rep 8:17656, 2018: 2.3-2.9 mm/min;
+#                     Front Cell Neurosci 16:837650, 2022: 2.0-9.0 mm/min).  NOT yet verified by
+#                     reading the papers (open item for Member 2).
+#   [calibrated]      computed by calibrate_excitable() from the two tags above
+#   [design choice]   chosen by Member 3; to be agreed with Member 4 (domain) or the team
+#   [illustrative]    no empirical basis
+#
+# TARGETS (narrow literature range used as baseline):
+#   temporal FWHM at a point   42.8 s   [S1-measured; animal means 36-56 s]
+#   front speed                2.6 mm/min = 0.0433 mm/s   [lit-derived; middle of 2.3-2.9]
+#   implied pulse width        speed x FWHM = 1.85 mm     [derived]
+#
+# To change the targets, do NOT edit D and k by hand: call
+#   calibrate_excitable(cfg, fwhm_s=..., speed_mm_per_min=...)   (src/model/calibration.py)
+
+model:
+  type: excitable           # excitable | fisher_kpp   (excitable = primary CSD-like test system)
+  dimension: 1              # 1 or 2
+  # ---- Excitable (FitzHugh-Nagumo type) --------------------------------------
+  #   u_t = D lap(u) + k*( u (1-u) (u-a) - v )
+  #   v_t = k*eps*( u - gamma v )
+  excitable:
+    D: 0.018561             # mm^2/s  [calibrated]  from FWHM 42.8 s and speed 2.6 mm/min
+    k: 0.503758             # 1/s     [calibrated]  = T0 / FWHM, T0 = 21.56 (dimensionless FWHM)
+    a: 0.1                  # -       [design choice] excitation threshold
+    eps: 0.01               # -       [design choice] recovery rate ratio
+    gamma: 2.0              # -       [design choice] chosen so pulse SHAPE resembles S1:
+                            #         rise10/FWHM  model 0.85 vs S1 0.82 ; decay10/FWHM model 0.66 vs S1 0.95
+    # Pulse is sensitive to (a, eps, gamma): eps >= 0.015 or a >= 0.15 killed the wave in scans.
+    # Re-run tests/ after any change. Behind the pulse u undershoots to about -0.3 (see interface note).
+  # ---- Fisher-KPP: u_t = D lap(u) + r u (1-u)  (front baseline; no recovery) ----
+  fisher_kpp:
+    D: 0.01296              # mm^2/s  [calibrated by hand] front length sqrt(D/r)=0.6 mm
+    r: 0.036                # 1/s     [calibrated by hand] c* = 2 sqrt(D r) = 0.0432 mm/s = 2.6 mm/min
+                            #         (speed approaches c* slowly from below; see tests)
+
+domain:
+  Lx: 30.0                  # mm  [design choice - TO BE AGREED WITH MEMBER 4; rat data cannot set this]
+  Ly: 20.0                  # mm  (used only when dimension: 2)
+  dx: 0.1                   # mm  [design choice] must be <= ~0.5*sqrt(D/k) = 0.096 mm to resolve the front
+  dy: 0.1                   # mm  (used only when dimension: 2)
+  boundary: neumann         # no-flux
+
+time:
+  T: 540.0                  # s   [design choice] wave needs ~ (Lx - x0)/c = 620 s to cross; 540 s stays inside
+  output_dt: 2.0            # s   [design choice] 21 frames per FWHM
+  dt: 0.1                   # s   target internal step (auto-reduced to be stable and to divide output_dt)
+
+solver:
+  method: rk4               # euler | rk4 | solve_ivp
+  safety: 0.9
+  ivp_method: RK45
+  ivp_rtol: 1.0e-6
+  ivp_atol: 1.0e-8
+
+initial_condition:
+  type: edge_step           # edge_step | gaussian | kpp_exact_wave (verification only)
+  x0: 3.0                   # mm   u = 1 for x < x0 (smoothed over `width`)
+  width: 0.5                # mm
+  center: [15.0, 10.0]      # mm   gaussian only: [x, y]
+  amplitude: 1.0
+
+random_seed: 0              # reserved; the solver is deterministic
+
+units:
+  length: mm
+  time: s
+  state: dimensionless      # u normalised per animal: 0 = rest, ~0.8 at pulse peak (excitable) / 1 (KPP)
