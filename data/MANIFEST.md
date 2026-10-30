@@ -54,11 +54,13 @@ Citation: Kucharczyk, M. (2026). *Cortical spreading depolarisation electrophysi
 | Content | Pediatric scalp EEG, 22 subjects / 23 cases, 10-20 montage, 256 Hz, 16-bit, mostly 23 channels |
 | Total size | 42.6 GB (do not download in full) |
 | Integrity / selection files | `SHA256SUMS.txt`, `RECORDS`, `RECORDS-WITH-SEIZURES`, `SUBJECT-INFO` |
-| Local path | `data/raw/S2-chbmit/` (not in Git) |
-| Status | Listed; files selected, not downloaded (owner: Member 4) |
+| Local path | Local copy outside the repository (not in Git) |
+| Status | Downloaded (selected files only); checksum vs `SHA256SUMS.txt`: not done (owner: Member 4) |
 | Role | Measured background/noise only. Epilepsy-monitoring data, never CSD or migraine data |
 | Selection rule | Download a few seizure-free baseline files plus each case's `chbNN-summary.txt`; exclude every file in `RECORDS-WITH-SEIZURES` |
-| Selected files | `chb01_01.edf`, `chb01_02.edf`, `chb01_08.edf` plus `chb01-summary.txt` (case chb01; seizure-free per summary and absent from `RECORDS-WITH-SEIZURES`; not yet downloaded) |
+| Selected files | `chb01_01.edf`, `chb01_02.edf`, `chb01_08.edf` plus `chb01-summary.txt` (case chb01; seizure-free per summary and absent from `RECORDS-WITH-SEIZURES`) |
+| Processing | Anti-aliased decimation 256 Hz to 0.5 Hz (three stages of 8), 60 s trimmed from each end; stored outside the repository as `noise_2s.npz` |
+| Prefilter | The EDF prefilter field in the `chb01_01` header is empty. This does not show whether hardware filtering was applied, so slow drift may be under-represented |
 
 Citation: Guttag, J. (2010). *CHB-MIT Scalp EEG Database* (Version 1.0.0). PhysioNet. [https://doi.org/10.13026/C2K01R](https://doi.org/10.13026/C2K01R). Also cite the original database publication and Goldberger et al. (2000), as specified by PhysioNet.
 
@@ -68,7 +70,7 @@ Citation: Guttag, J. (2010). *CHB-MIT Scalp EEG Database* (Version 1.0.0). Physi
 |---|---|
 | Source ID | `S3-mne-fsaverage` |
 | Provider | MNE-Python `fsaverage` template subject, 3-layer BEM, compatible 10-20 sensor positions |
-| Version | MNE-Python 1.11.0; template fetch date TBD (record at download) |
+| Version | MNE-Python 1.11.0; template fetched 2026-10-30 |
 | License | MNE-Python software: BSD-3-Clause. License for the downloaded template data files is unconfirmed; check before use. |
 | Local path | MNE data directory (outside repository) |
 | Status | Listed; license check pending (owner: Member 4) |
