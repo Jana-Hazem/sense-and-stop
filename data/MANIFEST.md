@@ -55,7 +55,7 @@ Citation: Kucharczyk, M. (2026). *Cortical spreading depolarisation electrophysi
 | Total size | 42.6 GB (do not download in full) |
 | Integrity / selection files | `SHA256SUMS.txt`, `RECORDS`, `RECORDS-WITH-SEIZURES`, `SUBJECT-INFO` |
 | Local path | Local copy outside the repository (not in Git) |
-| Status | Downloaded (selected files only); checksum vs `SHA256SUMS.txt`: git diff --stat (owner: Member 4) |
+| Status | Downloaded (selected files only); checksum vs `SHA256SUMS.txt`: not done (owner: Member 4) |
 | Role | Measured background/noise only. Epilepsy-monitoring data, never CSD or migraine data |
 | Selection rule | Download a few seizure-free baseline files plus each case's `chbNN-summary.txt`; exclude every file in `RECORDS-WITH-SEIZURES` |
 | Selected files | `chb01_01.edf`, `chb01_02.edf`, `chb01_08.edf` plus `chb01-summary.txt` (case chb01; seizure-free per summary and absent from `RECORDS-WITH-SEIZURES`) |
@@ -70,7 +70,7 @@ Citation: Guttag, J. (2010). *CHB-MIT Scalp EEG Database* (Version 1.0.0). Physi
 |---|---|
 | Source ID | `S3-mne-fsaverage` |
 | Provider | MNE-Python `fsaverage` template subject, 3-layer BEM, compatible 10-20 sensor positions |
-| Version | MNE-Python 1.11.0; template fetched git status |
+| Version | MNE-Python 1.11.0; template fetched 2026-10-30 |
 | License | MNE-Python software: BSD-3-Clause. License for the downloaded template data files is unconfirmed; check before use. |
 | Local path | MNE data directory (outside repository) |
 | Status | Listed; license check pending (owner: Member 4) |

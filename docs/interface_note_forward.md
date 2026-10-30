@@ -65,6 +65,7 @@ Scales run so far: 1e-9, 1e-8, 1e-7 A*m per source (seed 0). Report results at a
 - Anti-aliased decimation 256 Hz to 0.5 Hz (three stages of 8), 60 s trimmed from each end. This removes most normal EEG content, so the noise is band-limited.
 - Noise is correlated across channels. Standard deviation is about 2.2 to 2.5 uV on the left channels but 10.8 uV (P4-O2) and 12.0 uV (P8-O2) on the right (values from `noise_cov.npz`; the per-file mean printed by `make_noise.py` is lower, 8.7 and 10.5 uV). The right-side channels carry very little usable information.
 - `make_sensors` draws one random file and one random contiguous 271-sample segment per call. With only 3 files, repeated draws overlap.
+- Slow drift, measured on the 3 noise files (18 windows of 540 s): the linear trend over 540 s has median 0.02 to 0.06 uV and 95th percentile 0.09 to 0.20 uV on the left channels, and 1.3 to 1.5 uV (95th percentile) on P8-O2 and P4-O2. A linear trend explains under 0.5% of the variance (median). This is small next to the signal at scales 1e-7 and 1e-8, but not at 1e-9, where the peak clean signal is only 0.13 to 0.58 uV. The EDF prefilter field in the `chb01_01` header is empty, so the files give no information about hardware filtering (empty is not the same as unfiltered). If the recordings were high-pass filtered, real slow drift is under-represented here.
 
 ## 7. Signal-to-noise (upper bounds)
 
@@ -105,4 +106,5 @@ For t >= 60 s the peaks are much larger (P3-O1 118.1, P7-O1 88.7, T7-P7 53.1, C3
 - The u-to-volts scale is illustrative. Whether 1e-7 A*m per source is plausible has not been checked against a source.
 - Whether the sensor-signal decline after 60 s is due to the geometry or something else has not been tested.
 - Adult template head versus pediatric EEG: location of sources should not be over-interpreted (D4). S3 template license is unconfirmed.
-- Drift stress test: not run yet.
+- The EDF prefilter field (read from the `chb01_01` header only) is empty, so it is unknown whether very slow drift was filtered out before the data were stored. The CHB-MIT documentation may say; this has not been checked.
+- Drift has been measured in the noise (section 6) but no inversion stress test with added drift has been run. That needs Member 5's solver.
