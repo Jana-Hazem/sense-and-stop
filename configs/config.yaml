@@ -1,0 +1,39 @@
+# Sense & Stop - Master Configuration File
+model:
+  type: "excitable"
+  dimension: 2
+  excitable:
+    D: 0.05
+    k: 0.12
+    a: 0.1
+    eps: 0.01
+    gamma: 0.5
+
+domain:
+  Lx: 30.0
+  Ly: 20.0
+  dx: 0.5
+  dy: 0.5
+  boundary: "neumann"
+
+time:
+  T: 180.0
+  output_dt: 0.5
+  dt: 0.05
+
+initial_condition:
+  type: "gaussian"
+  center: [5.0, 10.0]
+  width: 2.0
+  amplitude: 1.0
+
+solver:
+  method: "rk4"
+  safety: 0.9
+
+control_extension:
+  enabled: true
+  target_location: [15.0, 10.0]
+  trigger_delay_s: 20.0
+  default_duration_s: 30.0
+  default_g0: 1.5
