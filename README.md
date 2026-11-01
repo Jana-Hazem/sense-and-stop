@@ -333,7 +333,6 @@ Phases 1–4 are implemented as modules; the items below are what still separate
 
 ## 10. Team & responsibilities
 
-**Team members:** Jana Mostafa Mohamed Abd El-Aal · Jana Waleed Abdelhameed Seif · Jana Hazem Mohamed Taha · Habiba Ahmed Farhat Mohamed · Suty Fady Zakaria Makar · Ganna Emad El-Din Salah Ali
 
 | Member | Responsibility |
 |---|---|
