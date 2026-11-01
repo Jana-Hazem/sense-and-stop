@@ -337,12 +337,12 @@ Phases 1–4 are implemented as modules; the items below are what still separate
 
 | Member | Responsibility |
 |---|---|
-| 1 | Project & data lead – repo scaffold, data inventory, provenance manifest, decision log |
-| 2 | Experimental CSD data steward – import, artifact flagging, empirical ranges, data card |
-| 3 | PDE & numerical model lead – solver, config, calibration, model interface |
-| 4 | Forward sensing & EEG lead – channel map, head model, `H`, noise preparation |
-| 5 | Inverse problem lead – regularized reconstruction, output/metadata contract |
-| 6 | Integration, documentation & control extension – run script, setup guide, control search |
+| 1- Jana Hazem | Project & data lead – repo scaffold, data inventory, provenance manifest, decision log |
+| 2- Suty Fady | Experimental CSD data steward – import, artifact flagging, empirical ranges, data card |
+| 3- Ganna Emad | PDE & numerical model lead – solver, config, calibration, model interface |
+| 4- Jana Mostafa | Forward sensing & EEG lead – channel map, head model, `H`, noise preparation |
+| 5- Jana Waleed | Inverse problem lead – regularized reconstruction, output/metadata contract |
+| 6- Habiba Ahmed | Integration, documentation & control extension – run script, setup guide, control search |
 
 ---
 
