@@ -4,13 +4,13 @@ Rise time 10% (rat),35.19 s,measured,same file,recomputed; M2 to confirm,mean of
 Decay time 10% (rat),40.68 s,measured,same file,recomputed; M2 to confirm,mean of 3 animal means; pooled = 41.93 s; independent check
 Wave-to-wave SD of FWHM,13.05 s,measured,scripts/rebuild_s1_summary.py output,recomputed,over 15 pooled waves; different weighting from the mean
 Rats / waves detected / kept / baseline,3 / 39 / 25 / 15,measured,data/s1_waves/ and docs/s1_manual_exclusions_reconstructed.csv,recomputed,per animal baseline 5 + 4 + 6; selection made by eye after seeing the data; exclusion reasons reconstructed
-Front speed,2.6 mm/min,literature-derived,single paper; midpoint of its range seen only as a snippet,no,calibration target; not measured in our data; source verification pending (M2)
+Front speed,2.6 mm/min,literature-derived,configs/model_default.yaml header; Sci Rep 8:17656 (2018) range 2.3-2.9 mm/min,no; papers not yet read by M2,midpoint of 2.3-2.9; a second paper (Front Cell Neurosci 16:837650; 2022) gives 2.0-9.0 mm/min; not measured in our data
 Spatial pulse width,1.85 mm,derived (speed x FWHM),computed: 2.6 mm/min x 42.76 s,n/a,not an observed width
 Source spacing,2.45 mm (min 1.84; max 3.04),derived,docs/interface_note_forward.md line 48,read from the note; M4 to confirm against the source-position file,nearest-neighbour distance in the flattened 2D source layout; min is about equal to the pulse width
 Number of sources,73,derived,docs/interface_note_forward.md line 47,read from the note; M4 to confirm,73 sources inside the 30 x 20 mm rectangle; 220 lie inside the 25 mm geodesic disc
 EEG channels,21,assumed (data format),docs/interface_note_forward.md lines 17-18,read from the note,background EEG is pediatric epilepsy data used only as noise; never labelled as CSD
-Grid spacing (data generation),0.1 mm,assumed (numerical choice),docs/interface_note_forward.md lines 21 and 97,read from the note; M3 to confirm the PDE solver grid matches,hidden wave saved on this grid; inversion must use a coarser grid (inverse crime); convergence to be tested in E1
-Time grid,271 samples; 2 s apart; 0-540 s,assumed,docs/interface_note_forward.md line 21,read from the note; M3/M4 to confirm,2 s matches decimated EEG sampling
-Spatial domain,30 mm x 20 mm,assumed,docs/interface_note_forward.md line 21,read from the note; M3 to confirm,301 x 201 grid points per frame
+Grid spacing (data generation),0.1 mm,assumed (numerical choice),docs/interface_note_forward.md lines 21 and 97; configs/model_default.yaml domain.dx,read from both files; E1 not yet run,yaml requires dx <= about 0.096 mm (0.5*sqrt(D/k)) so 0.1 mm is 4% above; inversion grid is 0.3 mm (configs/config.yaml)
+Time grid,271 samples; 2 s apart; 0-540 s,assumed,docs/interface_note_forward.md line 21; configs/model_default.yaml time,read from both files,21 frames per FWHM (42.8 / 2)
+Spatial domain,30 mm x 20 mm,assumed (design choice),docs/interface_note_forward.md line 21; configs/model_default.yaml domain,read from both files; yaml says to be agreed with M4,301 x 201 grid points per frame
 Source amplitude scales,1e-9; 1e-8; 1e-7,assumed,docs/interface_note_forward.md line 68,n/a,no empirical calibration; at 1e-9 the peak clean signal is only 0.13 to 0.58 uV
 Control success threshold,>=70% area reduction,assumed (design choice),report Eq. 7,n/a,fixed before optimization
