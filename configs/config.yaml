@@ -18,7 +18,7 @@ forward:                               # Member 4
     noise: noise_2s.npz
     noise_cov: noise_cov.npz
     u_default: u_2d_default.npy
-  scales_am: [1.0e-9, 1.0e-8, 1.0e-7]  # illustrative dipole moment per source at u = 1
+  scales_am: [1.0e-9, 1.0e-8, 1.0e-7]  # dipole moment per source for u = 1 (a multiplier). The simulated pulse peaks at u ~ 0.82, so the real peak is ~ 0.82 x scale
   noise_gain: 1.0
   seed: 0
 
