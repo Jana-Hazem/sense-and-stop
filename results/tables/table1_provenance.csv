@@ -1,28 +1,16 @@
 parameter,value,status,source,verified,note
-FWHM (rat),42.8 s,measured (3 rats; 15 waves; mean over waves),csd_empirical_ranges_clean.md (from csd_wave_features_v4.py),yes (summary file),calibration target; wave SD 13.05 s; animal means range 36.2 to 55.8 s
-Front speed,2.6 mm/min,literature-derived,source to confirm (M2),no,calibration target; not a measured sample value
-Rise time (rat),35.2 s,measured (3 rats; 15 waves; mean over waves),csd_empirical_ranges_clean.md,yes (summary file),independent check; rise_10pct = 10% amplitude crossing to peak; wave SD 17.8 s; animal means range 25.4 to 46.2 s
-Decay time (rat),40.7 s,measured (3 rats; 15 waves; mean over waves),csd_empirical_ranges_clean.md,yes (summary file),independent check; decay_10pct = peak to 10% amplitude crossing; wave SD 14.3 s; animal means range 28.0 to 47.2 s
-Spatial pulse width,1.85 mm,derived (speed x FWHM),computed,n/a,not an observed width
-Rise time (model),36.3 s,simulated,calibrated model (M3),n/a,compare with 35.2 s
-Decay time (model),28.2 s,simulated,calibrated model (M3),n/a,mismatch vs 40.7 s
-Source spacing,2.45 mm,derived,fsaverage mapping (M4),to check,may exceed derived width
-Grid spacing,0.5 mm,assumed (numerical choice),solver config (M3),n/a,convergence tested in E1
-Integration time step,0.05 s,assumed (numerical choice),solver config (M3),n/a,convergence tested in E1
-Sampling interval,2.0 s,assumed,matches decimated EEG (M4),n/a,
-Source amplitude scales,"1e-9; 1e-8; 1e-7",assumed,evaluation protocol,n/a,no empirical calibration
-D,TBD,derived from calibration,pending config decision (M3),no,do not copy from config.yaml
-k,TBD,derived from calibration,pending config decision (M3),no,do not copy from config.yaml
+FWHM (target),42.76 s,measured (3 rats; preliminary),results/E2_rat_comparison/tables/s1_per_animal_rebuilt.csv,recomputed; M2 to confirm,mean of 3 animal means; pooled over 15 waves = 44.07 s
+Rise time 10% (rat),35.19 s,measured,same file,recomputed; M2 to confirm,mean of 3 animal means; pooled = 36.00 s; independent check
+Decay time 10% (rat),40.68 s,measured,same file,recomputed; M2 to confirm,mean of 3 animal means; pooled = 41.93 s; independent check
+Wave-to-wave SD of FWHM,13.05 s,measured,scripts/rebuild_s1_summary.py output,recomputed,over 15 pooled waves; different weighting from the mean
+Rats / waves detected / kept / baseline,3 / 39 / 25 / 15,measured,data/s1_waves/ and docs/s1_manual_exclusions_reconstructed.csv,recomputed,per animal baseline 5 + 4 + 6; selection made by eye after seeing the data; exclusion reasons reconstructed
+Front speed,2.6 mm/min,literature-derived,single paper; midpoint of its range seen only as a snippet,no,calibration target; not measured in our data; source verification pending (M2)
+Spatial pulse width,1.85 mm,derived (speed x FWHM),computed: 2.6 mm/min x 42.76 s,n/a,not an observed width
+Source spacing,2.45 mm (min 1.84; max 3.04),derived,docs/interface_note_forward.md line 48,read from the note; M4 to confirm against the source-position file,nearest-neighbour distance in the flattened 2D source layout; min is about equal to the pulse width
+Number of sources,73,derived,docs/interface_note_forward.md line 47,read from the note; M4 to confirm,73 sources inside the 30 x 20 mm rectangle; 220 lie inside the 25 mm geodesic disc
+EEG channels,21,assumed (data format),docs/interface_note_forward.md lines 17-18,read from the note,background EEG is pediatric epilepsy data used only as noise; never labelled as CSD
+Grid spacing (data generation),0.1 mm,assumed (numerical choice),docs/interface_note_forward.md lines 21 and 97,read from the note; M3 to confirm the PDE solver grid matches,hidden wave saved on this grid; inversion must use a coarser grid (inverse crime); convergence to be tested in E1
+Time grid,271 samples; 2 s apart; 0-540 s,assumed,docs/interface_note_forward.md line 21,read from the note; M3/M4 to confirm,2 s matches decimated EEG sampling
+Spatial domain,30 mm x 20 mm,assumed,docs/interface_note_forward.md line 21,read from the note; M3 to confirm,301 x 201 grid points per frame
+Source amplitude scales,1e-9; 1e-8; 1e-7,assumed,docs/interface_note_forward.md line 68,n/a,no empirical calibration; at 1e-9 the peak clean signal is only 0.13 to 0.58 uV
 Control success threshold,>=70% area reduction,assumed (design choice),report Eq. 7,n/a,fixed before optimization
-Detection threshold,0.3 (on u_hat),assumed (design choice),report Sec. 3.5,n/a,trigger for control; sensitivity not yet tested
-PDE domain,30 x 20 mm,assumed,report Sec. 3.4,n/a,check against the config used for results
-Scalp electrodes / channels,21 electrodes; 19 bipolar channels,derived from montage,report Sec. 3.4 (M4),to check,
-EEG downsampling,256 Hz to 0.5 Hz,derived (matches 2.0 s interval),report Sec. 3.4 (M4),to check,hardware filtering not fully established
-Rat sample,3 animals (Z_R4 5 waves; Z_R5.S2R 4; Z_R6 6) = 15 pre-injection baseline waves,measured (preliminary),csd_per_animal_summary_clean.csv,yes (summary file),all three are zolpidem-group files; 13 waves excluded manually (list not yet located)
-Rat recording setup,DC: 1 site (M1; right side) at 10 kHz; Doppler: 1 probe 250-300 um rostral at 1 kHz,measured (file header + paper),data_dictionary Sec. 2,yes for Z_R4 only,ML/DV coordinates garbled in paper; reference; gain; filter unknown; markers do not align precisely with wave arrivals
-Model state u,dimensionless 0 to 1,assumed,report Eq. 1,n/a,not a measured voltage
-Resting potential,-70 mV,literature,report Sec. 3.1.1,no,background text only; not used in the model
-T0 and c0,TBD,unknown,find in solver code (M3),no,needed to explain k = T0/FWHM and D = (c/c0)^2/k
-Noise source,3 files from one case (chb01_01; chb01_02; chb01_08),measured (real EEG),MANIFEST S2,partly,one pediatric subject; checksum vs SHA256SUMS not done
-Noise processing,decimation 256 Hz to 0.5 Hz (3 stages of 8); 60 s trimmed each end,derived,MANIFEST S2,partly,EDF prefilter field empty; slow drift may be under-represented
-Head model,MNE 1.11.0 fsaverage; 3-layer BEM; adult template,assumed (template),MANIFEST S3 + data_dictionary Sec. 4,no,data license unconfirmed; vertex count seen in tutorial only
