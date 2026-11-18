@@ -1,0 +1,25 @@
+parameter,value,status,source,verified,note
+FWHM (rat),42.8 s,measured (3 rats; preliminary),RepOD S1 summary (M2),partly,calibration target
+Front speed,2.6 mm/min,literature-derived,source to confirm (M2),no,calibration target; not a measured sample value
+Rise time (rat),35.2 s,measured,RepOD S1 summary (M2),partly,independent check
+Decay time (rat),40.7 s,measured,RepOD S1 summary (M2),partly,independent check
+Spatial pulse width,1.85 mm,derived (speed x FWHM),computed,n/a,not an observed width
+Rise time (model),36.3 s,simulated,calibrated model (M3),n/a,compare with 35.2 s
+Decay time (model),28.2 s,simulated,calibrated model (M3),n/a,mismatch vs 40.7 s
+Source spacing,2.45 mm,derived,fsaverage mapping (M4),to check,may exceed derived width
+Grid spacing,0.5 mm,assumed (numerical choice),solver config (M3),n/a,convergence tested in E1
+Integration time step,0.05 s,assumed (numerical choice),solver config (M3),n/a,convergence tested in E1
+Sampling interval,2.0 s,assumed,matches decimated EEG (M4),n/a,
+Source amplitude scales,"1e-9; 1e-8; 1e-7",assumed,evaluation protocol,n/a,no empirical calibration
+D,TBD,derived from calibration,pending config decision (M3),no,do not copy from config.yaml
+k,TBD,derived from calibration,pending config decision (M3),no,do not copy from config.yaml
+Control success threshold,>=70% area reduction,assumed (design choice),report Eq. 7,n/a,fixed before optimization
+Detection threshold,0.3 (on u_hat),assumed (design choice),report Sec. 3.5,n/a,trigger for control; sensitivity not yet tested
+PDE domain,30 x 20 mm,assumed,report Sec. 3.4,n/a,check against the config used for results
+Scalp electrodes / channels,21 electrodes; 19 bipolar channels,derived from montage,report Sec. 3.4 (M4),to check,
+EEG downsampling,256 Hz to 0.5 Hz,derived (matches 2.0 s interval),report Sec. 3.4 (M4),to check,hardware filtering not fully established
+Rat sample,3 animals; 15 candidate waves,measured (preliminary),S1 summary,partly,events within one animal are not independent
+Rat recording setup,1 brain DC channel (10 kHz); Doppler and ECG (1 kHz),measured (file metadata),RepOD file inspected (one file),partly,electrode layout; reference; gain; filter; marker meaning = unknown
+Model state u,dimensionless 0 to 1,assumed,report Eq. 1,n/a,not a measured voltage
+Resting potential,-70 mV,literature,report Sec. 3.1.1,no,background text only; not used in the model
+T0 and c0,TBD,unknown,find in solver code (M3),no,needed to explain k = T0/FWHM and D = (c/c0)^2/k
