@@ -1,5 +1,6 @@
 """Rebuild the S1 per-animal summary from per-wave CSVs (replaces the lost merge script).
 Rule: baseline = pre_injection, no near_start_settling flag, not in the exclusion list.
+Inputs are tracked in data/s1_waves, so this runs from a clean checkout.
 Run from the repo root:  python scripts\\rebuild_s1_summary.py
 """
 import csv
@@ -7,7 +8,7 @@ import statistics as st
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-WAVES = ROOT / "outputs" / "CSD_results"
+WAVES = ROOT / "data" / "s1_waves"                      # CHANGED (was outputs/CSD_results)
 EXCL = ROOT / "docs" / "s1_manual_exclusions_reconstructed.csv"
 REF = WAVES / "csd_per_animal_summary_clean.csv"
 OUT_T = ROOT / "results" / "E2_rat_comparison" / "tables"
@@ -39,7 +40,7 @@ print(f"exclusion list: {len(excluded)} waves")
 
 kept = []   # (animal, phase, row)
 for aid, (stem, _) in ANIMALS.items():
-    path = WAVES / f"{stem}_v4" / f"{stem}_v4_waves.csv"
+    path = WAVES / f"{stem}_v4_waves.csv"               # CHANGED (no subfolder any more)
     with open(path, newline="") as f:
         rows = list(csv.DictReader(f))
     n_drop = 0
