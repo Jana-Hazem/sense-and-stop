@@ -1,3 +1,5 @@
 parameter,value,status,source,verified,note
 Rise time 10% (model),36.3 s,simulated (as reported),methodology report,no; M3 to regenerate from final config,compare with 35.19 s
 Decay time 10% (model),28.2 s,simulated (as reported),methodology report,no; M3 to regenerate from final config,mismatch vs 40.68 s; report as a mismatch not as validation
+Integration time step (target),0.1 s (default config); 0.05 s (calibration reference run),assumed (numerical choice),default model config time.dt; src/model/calibration.py line 107,read from the files; M3 to confirm,target only; solver sets dt = output_dt / ceil(output_dt / min(dt_target; dt_max)) with dt_max from the stability limit (src/model/solver.py lines 196-205)
+Integration time step (realized),read from run metadata,derived by the solver,meta["dt_internal_s"] in each run output (src/model/solver.py line 251),no; M3 to supply from the frozen run,depends on D; grid; method; no number is entered until M3 reports it
