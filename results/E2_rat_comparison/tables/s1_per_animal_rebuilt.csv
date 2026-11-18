@@ -1,0 +1,7 @@
+animal,group,n_waves,fwhm_s_mean,fwhm_s_sd,rise_10pct_s_mean,rise_10pct_s_sd,decay_10pct_s_mean,decay_10pct_s_sd,dc_to_doppler_delay_s_mean,dc_to_doppler_delay_s_sd,dc_amp_V_mean,dc_amp_V_sd,doppler_amp_V_mean,doppler_amp_V_sd
+Z_R4,baseline(pre_injection),5,36.2,2.9496,25.4,1.9494,47.2,7.2938,61.0,4.1833,0.1505,0.0132,1.7842,0.2773
+Z_R4,post_injection(separate),4,34.5,4.3589,25.75,2.63,37.0,5.8878,58.5,8.6987,0.1267,0.0241,1.5375,0.077
+Z_R5,baseline(pre_injection),4,36.25,8.4607,34.0,15.6844,28.0,6.377,59.0,26.0384,0.0784,0.0525,0.6935,0.1677
+Z_R5,post_injection(separate),2,47.0,1.4142,36.5,24.7487,57.0,21.2132,89.5,36.0624,0.0368,0.0239,0.3205,0.0544
+Z_R6,baseline(pre_injection),6,55.8333,12.2379,46.1667,22.3107,46.8333,17.0108,47.6667,16.8127,0.0931,0.0407,1.0667,0.22
+Z_R6,post_injection(separate),4,69.0,14.1657,51.5,15.8008,82.5,50.2162,94.0,36.037,0.1227,0.0415,0.6763,0.126
