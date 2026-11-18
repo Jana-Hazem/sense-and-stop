@@ -1,8 +1,8 @@
 parameter,value,status,source,verified,note
-FWHM (rat),42.8 s,measured (3 rats; preliminary),RepOD S1 summary (M2),partly,calibration target
+FWHM (rat),42.8 s,measured (3 rats; 15 waves; mean over waves),csd_empirical_ranges_clean.md (from csd_wave_features_v4.py),yes (summary file),calibration target; wave SD 13.05 s; animal means range 36.2 to 55.8 s
 Front speed,2.6 mm/min,literature-derived,source to confirm (M2),no,calibration target; not a measured sample value
-Rise time (rat),35.2 s,measured,RepOD S1 summary (M2),partly,independent check
-Decay time (rat),40.7 s,measured,RepOD S1 summary (M2),partly,independent check
+Rise time (rat),35.2 s,measured (3 rats; 15 waves; mean over waves),csd_empirical_ranges_clean.md,yes (summary file),independent check; rise_10pct = 10% amplitude crossing to peak; wave SD 17.8 s; animal means range 25.4 to 46.2 s
+Decay time (rat),40.7 s,measured (3 rats; 15 waves; mean over waves),csd_empirical_ranges_clean.md,yes (summary file),independent check; decay_10pct = peak to 10% amplitude crossing; wave SD 14.3 s; animal means range 28.0 to 47.2 s
 Spatial pulse width,1.85 mm,derived (speed x FWHM),computed,n/a,not an observed width
 Rise time (model),36.3 s,simulated,calibrated model (M3),n/a,compare with 35.2 s
 Decay time (model),28.2 s,simulated,calibrated model (M3),n/a,mismatch vs 40.7 s
@@ -18,7 +18,7 @@ Detection threshold,0.3 (on u_hat),assumed (design choice),report Sec. 3.5,n/a,t
 PDE domain,30 x 20 mm,assumed,report Sec. 3.4,n/a,check against the config used for results
 Scalp electrodes / channels,21 electrodes; 19 bipolar channels,derived from montage,report Sec. 3.4 (M4),to check,
 EEG downsampling,256 Hz to 0.5 Hz,derived (matches 2.0 s interval),report Sec. 3.4 (M4),to check,hardware filtering not fully established
-Rat sample,3 animals (Z_R4; Z_R5.S2R; Z_R6) and 15 candidate baseline waves,measured (preliminary),S1 summary (not in repo; to locate),partly,file names carry Z = zolpidem group; report figures show 39 numbered cycles so 15 is a subset; selection rule to document
+Rat sample,3 animals (Z_R4 5 waves; Z_R5.S2R 4; Z_R6 6) = 15 pre-injection baseline waves,measured (preliminary),csd_per_animal_summary_clean.csv,yes (summary file),all three are zolpidem-group files; 13 waves excluded manually (list not yet located)
 Rat recording setup,DC: 1 site (M1; right side) at 10 kHz; Doppler: 1 probe 250-300 um rostral at 1 kHz,measured (file header + paper),data_dictionary Sec. 2,yes for Z_R4 only,ML/DV coordinates garbled in paper; reference; gain; filter unknown; markers do not align precisely with wave arrivals
 Model state u,dimensionless 0 to 1,assumed,report Eq. 1,n/a,not a measured voltage
 Resting potential,-70 mV,literature,report Sec. 3.1.1,no,background text only; not used in the model
