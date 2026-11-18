@@ -1,0 +1,15 @@
+animal,wave_id,phase,removed_by,reconstructed_reason
+Z_R4,1,pre_injection,flag,near_start_settling flag only; values look normal
+Z_R5,1,pre_injection,flag,near_start_settling flag
+Z_R6,1,pre_injection,flag,near_start_settling flag; DC amplitude 3.42 V (about 30x typical)
+Z_R6,2,pre_injection,flag,near_start_settling flag; fwhm 9 s
+Z_R5,2,pre_injection,by_eye,DC amplitude 0.81 V (about 8x typical); fwhm 101 s; Doppler does not follow (delay -23 s)
+Z_R5,3,pre_injection,by_eye,DC amplitude 0.027 V; Doppler delay 286 s
+Z_R5,4,pre_injection,by_eye,DC amplitude 0.016 V; fwhm 19 s; Doppler delay 291 s
+Z_R5,5,pre_injection,by_eye,fwhm 178 s and 10% rise 130 s; Doppler amplitude 0.135 V
+Z_R6,3,pre_injection,by_eye,DC amplitude 4.43 V; fwhm 169 s; Doppler delay 283 s
+Z_R6,4,pre_injection,by_eye,10% decay 7 s versus fwhm 58 s (inconsistent); Doppler delay 132 s
+Z_R6,5,pre_injection,by_eye,borderline (data card); fwhm 10 s; Doppler delay 192 s
+Z_R5,12,post_injection,by_eye,borderline (data card); fwhm 129 s; decay at 350 s window limit; Doppler amplitude 0.032 V
+Z_R6,16,post_injection,by_eye,Doppler delay 296 s
+Z_R6,17,post_injection,by_eye,no numeric anomaly found; probably a trace artifact seen on the QC picture (check)
