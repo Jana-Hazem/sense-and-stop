@@ -1,0 +1,31 @@
+# Sense & Stop - master configuration
+# Model physics: configs/model_default.yaml (Member 3). Never duplicated here.
+# All paths are relative to the repo root. Run scripts from the repo root.
+
+paths:
+  model_config: configs/model_default.yaml
+  data_dir: data/derived               # git-ignored; derived files are never committed
+  outputs_dir: outputs
+
+model:
+  dimension: 2                         # forward side needs u[t, y, x] (D6); model_default.yaml stays 1D for M3's tests
+
+forward:                               # Member 4
+  files:                               # all inside data_dir
+    H_bip: H_bip.npz
+    A: A_matrix.npz
+    patch: flat_patch.npz
+    noise: noise_2s.npz
+    noise_cov: noise_cov.npz
+    u_default: u_2d_default.npy
+  scales_am: [1.0e-9, 1.0e-8, 1.0e-7]  # illustrative dipole moment per source at u = 1
+  noise_gain: 1.0
+  seed: 0
+
+inverse:                               # copied from run_member5.py; Member 5 must confirm
+  drop_channels: [P8-O2, P4-O2]
+  t_cut_s: 60.0
+  x_max_mm: 25.0
+  dx_inv_mm: 0.3
+  seed: 123
+  ridge: 1.0e-4
