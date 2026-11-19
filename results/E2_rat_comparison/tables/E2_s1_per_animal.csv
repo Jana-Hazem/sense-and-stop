@@ -1,0 +1,8 @@
+row,n_waves,FWHM (s) mean,FWHM (s) SD (within animal),FWHM (s) min-max,Rise 10% (s) mean,Rise 10% (s) SD (within animal),Rise 10% (s) min-max,Decay 10% (s) mean,Decay 10% (s) SD (within animal),Decay 10% (s) min-max
+R4,5,36.2,2.95,34-41,25.4,1.95,22-27,47.2,7.29,42-60
+R5,4,36.25,8.46,27-47,34.0,15.68,22-57,28.0,6.38,22-37
+R6,6,55.83,12.24,37-72,46.17,22.31,14-72,46.83,17.01,27-71
+Mean of animal means (n=3 animals),,42.76,,,35.19,,,40.68,,
+SD across animals (n=3),,11.32,,,10.43,,,10.98,,
+Range across animals,,36.20-55.83,,,25.40-46.17,,,28.00-47.20,,
+Pooled over waves (n=15) - reference only,15,44.07,13.05,,36.0,17.81,,41.93,14.25,

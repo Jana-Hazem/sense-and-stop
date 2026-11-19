@@ -1,0 +1,4 @@
+rule,n_waves,FWHM (s) (mean of animal means),Rise 10% (s) (mean of animal means),Decay 10% (s) (mean of animal means),FWHM SD across animals
+A. Baseline used for calibration (by-eye selection),15,42.76,35.19,40.68,11.32
+"B. All pre-injection, excluding only the near_start_settling flag",22,53.54,40.46,42.85,15.08
+"C. All pre-injection waves, no exclusion",26,54.85,37.17,45.54,17.1
