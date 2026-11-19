@@ -1,0 +1,41 @@
+# Sense & Stop - master configuration
+# Model physics: configs/model_default.yaml (Member 3). Never duplicated here.
+# Control parameters: configs/control.yaml (Member 6B). Never duplicated here.
+# All paths are relative to the repo root.
+
+paths:
+  model_config: configs/model_default.yaml
+  data_dir: data/derived               # git-ignored; derived files are never committed
+  outputs_dir: outputs
+
+model:
+  dimension: 2                         # forward side needs u[t, y, x] (D6); model_default.yaml stays 1D for M3's tests
+
+forward:                               # Member 4
+  files:                               # all inside data_dir
+    H_bip: H_bip.npz
+    A: A_matrix.npz
+    patch: flat_patch.npz
+    noise: noise_2s.npz
+    noise_cov: noise_cov.npz           # not read by run_member5.py (it re-estimates the covariance from noise_2s.npz)
+    u_default: u_2d_default.npy
+  scales_am: [1.0e-9, 1.0e-8, 1.0e-7]  # dipole moment per source for u = 1 (a multiplier). The simulated pulse peaks at u ~ 0.82, so the real peak is ~ 0.82 x scale
+  noise_gain: 1.0
+  seed: 0
+
+inverse:                               # Member 5 (src/inverse/run_member5.py, run unmodified by the pipeline)
+  # Channels, grid, dt, dx, scoring window, fit start, noise protocol and true speed are READ or DERIVED from the data files by that script
+  # (nothing typed in); every derived value is written to metadata.json in the run folder. Only run controls live here.
+  subdir: inverse                      # results: <outputs_dir>/<subdir>/run_<time>/ plus <outputs_dir>/<subdir>/latest/ (copies for control)
+  seeds: null                          # null = all disjoint noise windows (the script's default)
+  target_x_mm: null                    # null = 0.6 x domain length (18 mm for a 30 mm domain); written into event_estimate.json for control
+  extra_args: []                       # any other run_member5.py flags, e.g. ["--exclude-files", "chb01_23"] or ["--allow-fallbacks"]
+  outputs:                             # files run_member5.py writes in its run folder (the pipeline checks they exist)
+    reconstruction: reconstruction.npz
+    event_estimate: event_estimate.json
+
+control:                               # Member 6: HYPOTHETICAL numerical study, no clinical meaning. Final control files will be added here.
+  enabled: true                        # false: pipeline stops after the inverse stage
+  config: configs/control.yaml         # all control parameters live there
+  use_event_estimate: true             # latest/event_estimate.json = valid per-seed arrivals (whole-record fit, so retrospective)
+  extra_args: []                       # extra flags for run_control, e.g. ["--methods", "B_model"]
