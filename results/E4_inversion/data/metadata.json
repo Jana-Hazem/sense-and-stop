@@ -1,0 +1,155 @@
+{
+  "args": {
+    "data": "D:\\CUFE\\PDE\\Sense And Stop\\data\\derived",
+    "out": "D:\\CUFE\\PDE\\Sense And Stop\\outputs\\inverse",
+    "u2d": null,
+    "config": "D:\\CUFE\\PDE\\Sense And Stop\\configs\\model_default.yaml",
+    "template_config": null,
+    "template_dx_factor": 2.0,
+    "template_method": "solve_ivp",
+    "template_at": 0.5,
+    "gen_data": null,
+    "allow_fallbacks": false,
+    "allow_overlap": false,
+    "seeds": null,
+    "quick": false,
+    "dx": null,
+    "dt": null,
+    "scales": null,
+    "scale_factors": [
+      0.01,
+      0.1,
+      1.0
+    ],
+    "scale_assumed_factor": 1.0,
+    "drop": null,
+    "bad_ratio": 3.0,
+    "single": null,
+    "exclude_files": [],
+    "no_mask": false,
+    "max_flag_frac": 0.05,
+    "fit_t0": null,
+    "late_t0": null,
+    "settle_tol": 0.03,
+    "x_max": null,
+    "dxc_per_fwhm": 4.0,
+    "dxc": null,
+    "modes": [
+      "smooth",
+      "transport_fit",
+      "transport_lit"
+    ],
+    "c_lit": null,
+    "lam_min": 1e-08,
+    "lam_max": 10000.0,
+    "nlam": 9,
+    "ridge": 0.001,
+    "tau": 1.05,
+    "c_min": 0.5,
+    "c_max": 6.0,
+    "x0_min": null,
+    "x0_max": null,
+    "s_min": 0.5,
+    "s_max": 2.0,
+    "s_min_gauss": 0.1,
+    "s_max_gauss": 3.0,
+    "nuisance": "offset+slope",
+    "ar1": false,
+    "h_to_volt": "auto",
+    "detect_frac": 0.3,
+    "target_x": null,
+    "mismatch_d": 1.15,
+    "drift_uv": 5.0,
+    "cut_sens": null
+  },
+  "notes": [
+    "noise_2s.npz has no artifact_mask: no artifact screening of noise windows",
+    "H_bip.npz not found, used H_matrix.npz",
+    "main: channels without an H row (skipped): ['T7-FT9', 'FT9-FT10', 'FT10-T8']"
+  ],
+  "versions": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "pandas": "2.3.3"
+  },
+  "git": {
+    "commit": "694344dd401c3e953bd1c643b578bb4e1470969a",
+    "status": "M configs/config.yaml\n M scripts/rebuild_s1_summary.py\n M src/forward/sensors.py\n M src/inverse/run_member5.py\n?? data/s1_waves/\n?? results/tables/table1b_model_values.csv\n?? \"src/inverse/run_member5 (2).py\"\n?? src/inverse/run_member5_v4.py"
+  },
+  "h": {
+    "h": 1.0000000051850613,
+    "mismatch": 1.416341054819805e-08,
+    "source": "fitted to clean_V (18 channels)"
+  },
+  "h_format": "monopolar",
+  "gen_data": null,
+  "derived": {
+    "dx": 0.1,
+    "dt": 2.0,
+    "scales": [
+      1e-09,
+      1e-08,
+      1e-07
+    ],
+    "channels": [
+      "FP1-F7",
+      "F7-T7",
+      "T7-P7",
+      "P7-O1",
+      "FP1-F3",
+      "F3-C3",
+      "C3-P3",
+      "P3-O1",
+      "FP2-F4",
+      "F4-C4",
+      "C4-P4",
+      "P4-O2",
+      "FP2-F8",
+      "F8-T8",
+      "T8-P8",
+      "P8-O2",
+      "FZ-CZ",
+      "CZ-PZ"
+    ],
+    "truth_speed": 2.605793668268884,
+    "late_t0": 58.0,
+    "x_max": 25.665265771565203,
+    "fwhm_truth": 1.9000000000000001,
+    "fit_t0": 66.0,
+    "template": "member3_solver dx=0.2 cfg=model_default.yaml",
+    "template_fwhm": 1.7999999999999936,
+    "dxc": 0.4499999999999984,
+    "target_x": 18.0,
+    "truth_arrival": 363.05604646395443,
+    "nseeds": 9,
+    "nseeds_max": 9,
+    "c_lit": null,
+    "noise_files": [
+      "chb01_01.edf",
+      "chb01_02.edf",
+      "chb01_08.edf"
+    ],
+    "noise_files_excluded": [],
+    "artifact_mask": {
+      "used": false,
+      "flagged_share_per_channel": null,
+      "windows_skipped": 0,
+      "max_flag_frac": 0.05
+    },
+    "lag1_whitened": [
+      -0.2090680056603333,
+      -0.22239383369703378,
+      -0.240866864100611
+    ]
+  },
+  "noise_protocol": "covariance from the other files; data and baseline windows are disjoint windows of the held-out file; bad channels from the baseline window",
+  "hashes": {
+    "A_matrix.npz": "fbe870aa0e9cf475",
+    "H_bip.npz": "dca88c9f52b55c19",
+    "noise_2s.npz": "4c7b18bd967b648d",
+    "sensors_default.npz": "5329be2a9f8aa6e6",
+    "flat_patch.npz": "4dcf9ddf46a3eaa9"
+  },
+  "hash_u2d": "deda916de93175a3"
+}
