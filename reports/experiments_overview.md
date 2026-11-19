@@ -2,7 +2,8 @@
 
 Each experiment answers one research question, compares against a stated baseline,
 uses a defined metric, and limits its claim to the conditions tested. All claims
-apply to synthetic, one-dimensional, rat-derived conditions and are not clinical.
+apply to synthetic, effectively one-dimensional (uniform in y), rat-derived
+conditions and are not clinical.
 
 ## Experiments
 
@@ -21,15 +22,20 @@ target. Rise and decay are independent checks.
 
 ## Reporting rules used in all experiments
 
-- The number of runs or seeds, the aggregation (median and IQR, or mean and SD) and the meaning of error bars are stated for every result.
+- The number of runs, seeds or noise windows, the aggregation (median and IQR, or mean and SD) and the meaning of error bars are stated for every result.
 - Small samples are shown as individual points.
-- Methods are compared on paired seeds, so every method sees the same noise.
+- Methods are compared on paired seeds or paired noise windows, so every method sees the same noise.
 - Data used to fit parameters is kept apart from data used to evaluate them.
 - Results state what was measured. Interpretation is in the Discussion.
 - Every figure has a script, an input data file and a seed, listed in results/figure_index.csv.
 
 ## Test environment
 
+<<<<<<< Updated upstream
+=======
+The computational experiments use a **synthetic PDE field on a two-dimensional grid with no variation along y (a plane wave travelling along x, effectively one-dimensional)**, parameterized using rat-derived experimental features, together with synthetic sensor observations and recorded EEG background-noise windows. The rat recordings provide experimental timing information; they are not human migraine or CSD recordings.
+
+>>>>>>> Stashed changes
 ### Computing environment
 
 | Item | Value |
@@ -37,10 +43,13 @@ target. Rise and decay are independent checks.
 | Operating system | Windows 11 Pro, build 26300 |
 | Hardware | 13th Gen Intel Core i7-1365U, 16 GB RAM |
 | Python | 3.13.9 (shared project environment) |
+<<<<<<< Updated upstream
 | NumPy | 2.3.5 |
 | SciPy | 1.16.3 |
 | pandas | 2.3.3 |
 | Matplotlib | 3.10.7 |
+=======
+>>>>>>> Stashed changes
 
 ### Software and computational implementation
 
@@ -48,9 +57,15 @@ target. Rise and decay are independent checks.
 |---|---|
 | E1 — PDE solver (Member 3) | `src/model/solver.py`: excitable FitzHugh–Nagumo-type reaction–diffusion PDE, second-order finite differences, Neumann no-flux boundaries implemented using reflecting ghost nodes, and RK4 time integration. Configuration: `configs/model_default.yaml`. Spatial grid spacing = 0.1 mm; actual internal time step = 0.1 s. The solver validation experiments are deterministic and do not require random seeds. |
 | E2 — Experimental data analysis (Member 2) | Analysis of rat cortical spreading depolarization recordings using extracted DC and laser Doppler event features. Per-animal summaries and event-level measurements are used for experimental comparisons. The FWHM figure uses plotting jitter seed = `20261119`. |
+<<<<<<< Updated upstream
 | E3 — Forward model (Member 4) | `src/forward/`: sparse area-averaging operator `A_matrix.npz` (73 × 60,501) and monopolar average-referenced lead-field matrix `H_matrix.npz` (19 × 73). The bipolar channels are constructed by subtracting rows of the monopolar H matrix. The source patch contains 73 sources on a 301 × 201 grid with 0.1 mm spacing over a 30 × 20 mm domain. The synthetic sensor record in `sensors_default.npz` has dimensions (271, 21) and was generated using seed = `0`. |
 | E4 — Inversion (Member 5) | `src/inverse/run_member5.py`: Method A, Tikhonov free-field inversion, and Method B, travelling-pulse least-squares fitting. Uses `H_matrix.npz`, with bipolar channels formed by subtracting monopolar H rows. The pulse template uses `solve_ivp` with RK45 (`rtol = 1e-6`, `atol = 1e-8`) at twice the data grid spacing. Both inversion methods use deterministic computation without random initialization. |
 | E5 — Control (Members 6 and 3) | The control implementation uses the PDE solver and differential-evolution optimization with Sobol initialization, followed by Nelder–Mead polishing. The search uses a base seed of 0 and a scenario-specific seed derived from the CRC32 hash of the scenario name, so seed assignment does not depend on scenario execution order. Controlled and uncontrolled simulations use matched initial conditions, parameters, grid and time axis. |
+=======
+| E3 — Forward model (Member 4) | `src/forward/`: sparse area-averaging operator `A_matrix.npz` (73 × 60,501) and monopolar average-referenced lead-field matrix `H_matrix.npz` (19 × 73). Bipolar channels are constructed by subtracting rows of the monopolar H matrix. The PDE grid is 301 × 201 points at 0.1 mm spacing (30 × 20 mm). The source patch has 73 sources, each averaging the grid over its area. The synthetic sensor record in `sensors_default.npz` has dimensions (271, 21) and was generated using seed = `0`. |
+| E4 — Inversion (Member 5) | `src/inverse/run_member5.py`: Method A, Tikhonov free-field inversion, and Method B, travelling-pulse least-squares fitting. Uses `H_matrix.npz`, with bipolar channels formed by subtracting monopolar H rows. The pulse template uses `solve_ivp` with RK45 (`rtol = 1e-6`, `atol = 1e-8`) at twice the data grid spacing. Both inversion methods use deterministic computation without random initialization. |
+| E5 — Control (Members 6 and 3) | The control implementation uses the PDE solver and differential-evolution optimization with Sobol initialization, followed by Nelder–Mead polishing. The search uses a base seed of 0 and a scenario-specific seed derived from the CRC32 hash of the scenario name; seed assignment therefore does not depend on scenario execution order. Controlled and uncontrolled simulations use matched initial conditions, parameters, grid and time axis. |
+>>>>>>> Stashed changes
 
 ### Background-noise data and evaluation windows (E4)
 
@@ -65,12 +80,21 @@ target. Rise and decay are independent checks.
 | Processed sampling interval | 2 s (0.5 Hz) |
 | Processing | Anti-aliased decimation from 256 Hz to one sample every 2 seconds; edge-trimmed recordings |
 | Simulation window length | 271 samples per window |
+<<<<<<< Updated upstream
 | Paired windows | 3 non-overlapping pairs per recording |
 | Total evaluation windows | 9 paired windows per scale and case |
 
 Each evaluation pair consists of a data window and a separate baseline window used for noise estimation and bad-channel detection. Each recording provides three non-overlapping pairs because 1740 samples allow three pairs of 271-sample windows.
 
 The nine pairs are deterministic window selections, not nine independent subjects or independently generated random seeds. The false-alarm denominator is 18 because both windows in each pair are evaluated as data windows.
+=======
+| Paired noise windows | 3 non-overlapping pairs per recording |
+| Total evaluation pairs | 9 paired noise windows per scale and case |
+
+Each evaluation pair consists of a data window and a separate baseline window used for noise estimation and bad-channel detection. Each recording provides three non-overlapping pairs because 1740 samples allow three pairs of 271-sample windows.
+
+The nine pairs are deterministic paired noise-window selections, not nine independent subjects or independently generated random seeds. The false-alarm denominator is 18 because both windows in each pair are evaluated as data windows.
+>>>>>>> Stashed changes
 
 ### Sensor and operator conventions
 
@@ -94,4 +118,8 @@ The nine pairs are deterministic window selections, not nine independent subject
 
 For supplementary E4 analyses, the drift test uses seeded drift amplitudes, with seed = `1000 + evaluation-window index`. The E4 plotting jitter uses seed = `0`. These supplementary seeds are separate from the main inversion evaluation.
 
+<<<<<<< Updated upstream
 **Scope of reproducibility:** The nine E4 evaluation pairs all originate from three recordings belonging to one subject. They quantify repeated window-level performance and must not be interpreted as nine independent subjects. E5's seed assignment is documented, but its real-data control results must be reported separately once the experiment is executed.
+=======
+**Scope of reproducibility:** The nine E4 evaluation pairs all originate from three recordings belonging to one subject. They quantify repeated window-level performance and must not be interpreted as nine independent subjects. E5 results on the real reconstruction are to be reported after the corresponding reconstruction-based control run; they are not claims of efficacy in biological tissue or patients.
+>>>>>>> Stashed changes
