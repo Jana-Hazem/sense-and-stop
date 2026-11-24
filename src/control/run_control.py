@@ -136,7 +136,7 @@ def main(argv=None):
             for i, v in enumerate(vals):
                 name = f"event:{sc}:{i}"
                 if not np.isfinite(v): scen.append((name, "event", "B_model", float(sc), i, np.nan, "no_detection", {})); continue
-                scen.append((name, "event", "B_model", float(sc), i, delta_from_arrival(v, truth_arr, a_nom), "ok", dict(arrival_err_s=v - truth_arr)))
+                scen.append((name, "event", "B_model", float(sc), i, delta_from_arrival(v, a_nom), "ok", dict(arrival_err_s=v - truth_arr)))
             for j in range(ev.get("n_failed", {}).get(sc, 0)):                      # failed fits count as "no estimate -> no control" (not hidden)
                 scen.append((f"event:{sc}:failed{j}", "event", "B_model", float(sc), 1000 + j, np.nan, "no_detection", {}))
     dl = np.array([q[5] for q in scen if q[6] == "ok"]); dmax = float(np.max(np.abs(dl))) if len(dl) else 0.0
@@ -144,28 +144,43 @@ def main(argv=None):
     hw = pl.get("timing_halfwidth_s")
     if hw in (None, "auto"): raise SystemExit("ERROR: planning.timing_halfwidth_s must be a pre-declared numeric value, not auto")
     S = float(hw)
-    factors = [tuple(map(float, f)) for f in (pl.get("model_factors", [[1, 1]]) if not a.quick else [[1, 1]])]
+    def factor_dict(raw):
+        """Accept legacy [D, k] factors and explicit five-parameter maps."""
+        fac = {q: 1.0 for q in ("D", "k", "a", "eps", "gamma")}
+        if isinstance(raw, dict): fac.update({q: float(v) for q, v in raw.items()})
+        else:
+            vals = list(map(float, raw))
+            if len(vals) not in (2, 5): raise ValueError("planning.model_factors entries must be [D,k], [D,k,a,eps,gamma], or maps")
+            fac.update(dict(zip(("D", "k", "a", "eps", "gamma"), vals)))
+        return fac
+    factors = [factor_dict(f) for f in (pl.get("model_factors", [[1, 1]]) if not a.quick else [{"D": 1.0, "k": 1.0, "a": 1.0, "eps": 1.0, "gamma": 1.0}])]
+    required_strength_factors = tuple(map(float, pl.get("required_strength_factors", [])))
     print(f"{len(scen)} retrospective scenarios (data through t_obs={d.t_obs:g} s) | largest |delta| = {dmax:.1f} s (not used to choose S) | pre-declared S = {S:g} s | model factors {factors} | random plant onset shift {onset_shift:+.2f} s")
     p_obs = float(nom.at(d.t_obs)); models = {}
     def cases_for(Sx):
         out = []
-        for fd, fk in factors:
-            if (fd, fk) not in models: m = nominal.scaled(fd, fk); models[(fd, fk)] = (m, float(simulate(m, grid, u0, prot, None, p=d.p, dt_target=dt_final)["damage"][0]))
-            m, D0m = models[(fd, fk)]; out += [dict(model=m, D0=D0m, offset=float(o)) for o in sorted({-Sx, 0.0, Sx})]
+        for fac in factors:
+            key = tuple(fac[q] for q in ("D", "k", "a", "eps", "gamma"))
+            if key not in models:
+                m = nominal.scaled(**fac); models[key] = (m, float(simulate(m, grid, u0, prot, None, p=d.p, dt_target=dt_final)["damage"][0]))
+            m, D0m = models[key]; out += [dict(model=m, D0=D0m, offset=float(o)) for o in sorted({-Sx, 0.0, Sx})]
         return out
     def plan(Sx):
         bnd = search_bounds(d, p_obs)
         if bnd is None: raise SystemExit("ERROR: no admissible control location between the front at t_obs and the protected region")
         bnd[1] = (min(max(bnd[1][0], d.t_obs + Sx), bnd[1][1] - 1e-6), bnd[1][1]); t1 = time.time()
-        runs = [optimise(cases_for(Sx), grid, u0, prot, d, bnd, s, seed_offset=int(seed)) for seed in s.get("seeds", [s["seed"]])]
+        runs = [optimise(cases_for(Sx), grid, u0, prot, d, bnd, s, seed_offset=int(seed), strength_factors=required_strength_factors) for seed in s.get("seeds", [s["seed"]])]
         # A plan is feasible only when every planning case both has a protected
         # peak below 10% and leaves no wave front alive at the end of the run.
         extinct_u = float(cfg["objective"].get("extinct_u", 0.1))
         for r in runs:
             checks = []
             for c in cases_for(Sx):
-                o = simulate(c["model"], grid, u0, prot, make_ctrl(np.asarray(r["P"], float)[:, None], d), clock_offset=c["offset"], p=d.p, dt_target=dt_final)
-                checks.append(bool(o["peak"][0] / max(float(simulate(c["model"], grid, u0, prot, None, p=d.p, dt_target=dt_final)["peak"][0]), 1e-12) < d.block_fraction and o["final_max_u_domain"][0] < extinct_u))
+                base_peak = max(float(simulate(c["model"], grid, u0, prot, None, p=d.p, dt_target=dt_final)["peak"][0]), 1e-12)
+                for strength_factor in (1.0,) + required_strength_factors:
+                    Pcheck = np.asarray(r["P"], float).copy(); Pcheck[3] *= strength_factor
+                    o = simulate(c["model"], grid, u0, prot, make_ctrl(Pcheck[:, None], d), clock_offset=c["offset"], p=d.p, dt_target=dt_final)
+                    checks.append(bool(o["peak"][0] / base_peak < d.block_fraction and o["final_max_u_domain"][0] < extinct_u))
             r["feasible"] = all(checks)
         feasible = [r for r in runs if r["feasible"]]
         if not feasible:
@@ -238,7 +253,7 @@ def main(argv=None):
                event_bias_s=("arrival_err_s", "mean"), event_spread_sd_s=("arrival_err_s", "std"))
     for c in ("blocked_frac_timing", "blocked_frac_mismatch"):
         if c in sub: agg[c] = (c, "mean")
-    g = sub.groupby(["source", "method", "scale"], dropna=False).agg(**agg).reset_index(); g.to_csv(out / "control_summary.csv", index=False); print("\n" + g.assign(scale=g.scale.map(lambda v: f"{v:.0e}" if pd.notna(v) and np.isfinite(v) else "baseline")).round(4).to_string())
+    g = sub.groupby(["source", "method", "scale"], dropna=False).agg(**agg).reset_index(); g.to_csv(out / "control_summary.csv", index=False); print("\n" + g.assign(scale=g.scale.map(lambda v: f"{v:.0e}" if np.isfinite(v) else "baseline")).round(4).to_string())
     win = None
     if len(rb):
         ro = rb[rb.scenario == "oracle"].sort_values("shift_s"); ok0 = ro[ro.shift_s == 0]

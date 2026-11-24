@@ -38,7 +38,10 @@ estimation:
   min_points: 3
 planning:                    # the ONE robust plan must block the wave for all pre-declared cases
   timing_halfwidth_s: 25.0   # fixed before evaluation; never derived from evaluated errors
-  model_factors: [[1, 1], [0.9, 1], [1.1, 1]]     # [D factor, k factor] guards against model error
+  model_factors:             # D or k changed by +-10% (speed error envelope)
+    - {D: 1.0, k: 1.0}
+    - {D: 0.9, k: 1.0}
+    - {D: 1.1, k: 1.0}
   strength_factors: [0.5, 0.75]
   tradeoff_halfwidths_s: [0, 5, 10, 20, 30]       # used with --tradeoff
 evaluation:
@@ -64,4 +67,5 @@ search:
   maxiter: 25
   tol: 1.0e-3
   polish_maxiter: 30
+  polish_g0_rtol: 0.01
   dt_target_s: 0.5
