@@ -27,7 +27,7 @@ def load_events(path, method_key="B", default_target_x=15.0):
     if not isinstance(per, dict) or not per:
         return dict(target_x_mm=default_target_x, target_source="config", truth_arrival_s=None, per_scale={}, layout="none",
                     warnings=[f"{path}: no 'per_scale' dictionary; top-level keys = {sorted(ev)}"])
-    scales, layouts = {}, set()
+    scales, layouts, failed = {}, set(), {}
     for sc, e in per.items():
         e = e if isinstance(e, dict) else {}
         if "arrival_s_per_seed" in e: vals = _floats(e["arrival_s_per_seed"]); layouts.add("per_seed")
@@ -36,6 +36,8 @@ def load_events(path, method_key="B", default_target_x=15.0):
         else:
             warnings.append(f"scale {sc}: no 'arrival_s_per_seed' and no '{method_key}.arrival_est_s'; keys found = {sorted(e)}"); continue
         scales[str(sc)] = vals
+        k = e.get("n_failed", (int(e["n"]) - len(vals)) if e.get("n") is not None else 0)       # fits Member 5 dropped (not a valid arrival)
+        failed[str(sc)] = max(int(k), 0)
     tx = ev.get("target_x_mm"); truth = ev.get("truth_arrival_s")
     return dict(target_x_mm=float(tx) if tx is not None else float(default_target_x), target_source="json" if tx is not None else "config",
-                truth_arrival_s=float(truth) if truth is not None else None, per_scale=scales, layout="+".join(sorted(layouts)) or "none", warnings=warnings)
+                truth_arrival_s=float(truth) if truth is not None else None, per_scale=scales, n_failed=failed, layout="+".join(sorted(layouts)) or "none", warnings=warnings)

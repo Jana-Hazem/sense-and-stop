@@ -1,107 +1,67 @@
-# Sense & Stop — Member 6B — Control extension (HYPOTHETICAL numerical study; no clinical meaning)
-#
-# ═══════════════════════════════════════════════════════════════════════════════
-# CONTROL FORMULATION
-# ═══════════════════════════════════════════════════════════════════════════════
-# PDE (Member 3 excitable model + control term):
-#   u_t = D u_xx + k·(u(1-u)(u-a) − v) − g(x,t)·u
-#   v_t = k·ε·(u − γ·v)
-#   g ≡ 0  →  identical to Member 3; g > 0  →  HYPOTHETICAL local suppression
-#
-# Control term:
-#   g(x,t) = g0 · zone(x; xc, w) · gate(t; ts, dur, ramp)
-#   g0 bounded below by bounds.strength_per_s[0] > 0
-#   (a plan with g0 ≈ 0 provides no suppression and would be a knife-edge artefact)
-#
-# Objective:
-#   J(P) = D(P)/D₀  +  w · E(P)/E_ref
-#   PRIMARY METRICS for reporting: blocked (peak_ratio < block_fraction) and damage_ratio.
-#   J itself is dominated by tiny effort differences when the wave is fully blocked and
-#   should NOT be used to rank plans — use blocked_frac and damage_ratio instead.
-#
-# ═══════════════════════════════════════════════════════════════════════════════
-# INPUT CONTRACTS
-# ═══════════════════════════════════════════════════════════════════════════════
-# Member 3 → configs/model_default.yaml  (fields: model.excitable.{D,k,a,eps,gamma})
-# Member 5 → reconstruction.npz          (keys: t, x, u_truth|truth, rec_<method>_<scale>|rec_<scale>)
-#            event_estimate.json         (keys: per_scale.<s>.{arrival_s_per_seed | B.arrival_est_s})
-#
-# KNOWN LIMITATIONS (see control_metadata.json::notes for details)
-# 1. Causality: reconstructions are fitted to the full 540 s record; a real controller
-#    at t_obs=150 s would use only 0–150 s data.  Results are optimistic.
-# 2. Inverse crime: plant == nominal model (D_factor=k_factor=1).  Addressed partially
-#    by the plant_variants mismatch grid below, but not fully resolved.
-# 3. Protected region (20–28 mm): the uncontrolled wave enters at ≈393 s and only
-#    partly crosses before T=540 s, so D₀ reflects a partial crossing.
-
-inputs:
-  model_config: configs/model_default.yaml
-  reconstruction:
-    - outputs/inverse/run_*/reconstruction*.npz
-    - outputs/reconstruction*.npz
-    - outputs/member5_recon.npz
-  event_estimate:
-    - outputs/inverse/run_*/event_estimate*.json
-    - outputs/event_estimate*.json
-
+# E5 / Member 6B v3 - hypothetical numerical control study (no clinical meaning). Control = stripe g(x,t) = g0 * zone(x) * gate(t), uniform in y.
+#   u_t = D u_xx + k*(u(1-u)(u-a) - v) - g(x,t) u      (g = 0: identical to Member 3)
+output:
+  dir: results/E5_control/runs
+  quick_dir: results/E5_control/quick_smoke
+target:
+  x_mm: 18.0                 # only used if event_estimate.json has no target_x_mm
 event:
   method_key: B
-  target_x_mm: 18.0   # matches event_estimate.json (was 15.0, which was misleading)
-
 plant:
-  D_factor: 1.0
+  D_factor: 1.0              # the "real" plant; the planner always uses the nominal model
   k_factor: 1.0
-
-protected_region:
-  x_min: 20.0
-  x_max: 28.0
-
+  a_factor: 1.0
+  eps_factor: 1.0
+  gamma_factor: 1.0
+  onset_seed: 20261124       # fixed seed makes the random onset shift reproducible
+  onset_shift_s: [-10.0, 10.0]
+protected_region: {x_min: 20.0, x_max: 28.0}
 intervention:
   width_mm: 3.0
   edge_mm: 0.5
   ramp_s: 5.0
   margin_front_mm: 1.0
   margin_protect_mm: 0.5
-
 bounds:
   t_obs_s: 150.0
   start_max_s: null
   duration_s: [10.0, 200.0]
-  # Lower bound > 0: prevents knife-edge plans with g0 ≈ 0 that give J ≈ 0 by luck
-  strength_per_s: [0.005, 2.0]
-
+  strength_per_s: [0.0, 2.0]
 objective:
   damage_exponent: 2.0
   effort_weight: 0.1
-  block_fraction: 0.1    # peak_ratio < this → wave counted as "blocked"
-
+  block_fraction: 0.1        # peak in protected region < 10% of uncontrolled peak = "blocked"
+  extinct_u: 0.1             # end-of-run max u over the entire domain must also be below this
 estimation:
   detect_fraction: 0.3
   front_window_s: 60.0
   min_points: 3
-
+planning:                    # the ONE robust plan must block the wave for all pre-declared cases
+  timing_halfwidth_s: 25.0   # fixed before evaluation; never derived from evaluated errors
+  model_factors: [[1, 1], [0.9, 1], [1.1, 1]]     # [D factor, k factor] guards against model error
+  strength_factors: [0.5, 0.75]
+  tradeoff_halfwidths_s: [0, 5, 10, 20, 30]       # used with --tradeoff
+evaluation:
+  plant_cases:
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 0.9, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.1, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 0.9, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.1, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 0.9, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.1, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 0.8, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.2, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.0, gamma: 0.9}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.1}
 robustness:
-  # Timing shifts applied to EVERY successful plan (not only oracle)
-  timing_shifts_s: [-90, -60, -30, -15, 0, 15, 30, 60, 90]
-  # Plant-parameter variants for model-mismatch grid (inverse-crime partial fix)
-  # Each entry is {D_factor, k_factor}: deviations ±10% from nominal
-  plant_variants:
-    - {D_factor: 0.9, k_factor: 1.0}
-    - {D_factor: 1.0, k_factor: 1.0}   # nominal — should equal J_true in results.csv
-    - {D_factor: 1.1, k_factor: 1.0}
-    - {D_factor: 1.0, k_factor: 0.9}
-    - {D_factor: 1.0, k_factor: 1.1}
-
+  timing_shifts_s: [-40, -35, -30, -25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30, 35, 40]
+  tolerance_s: auto          # auto = planned half-width S; blocked_frac_timing = fraction blocked for shifts within +-tolerance
 search:
   seed: 0
-  # Full-run parameters (--quick overrides to popsize=4, maxiter=8, polish=20, n_rec_seeds=1)
-  popsize: 8              # K = 8×4 = 32 candidates per generation
-  maxiter: 25             # DE generations before switching to Nelder-Mead polish
-  tol: 1.0e-4             # relative improvement threshold for early DE exit
-  polish_maxiter: 60      # Nelder-Mead polish steps (skipped when J < 1e-4 on planning model)
-  dt_target_s: 0.5        # RK4 sub-step target during search
-  n_rec_seeds: 5          # run each rec key this many times with different optimizer seeds
-                          # → gives blocked_frac and damage_ratio distributions per method/scale
-
-output:
-  dir: outputs/control
+  seeds: [0, 1]
+  popsize: 8
+  maxiter: 25
+  tol: 1.0e-3
+  polish_maxiter: 30
+  dt_target_s: 0.5

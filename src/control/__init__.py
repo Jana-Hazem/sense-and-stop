@@ -1,1 +1,1 @@
-"""Member 6B."""
+"""Member 6B (v3, fast)."""
