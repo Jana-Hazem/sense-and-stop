@@ -154,7 +154,7 @@ def main(argv=None):
             fac.update(dict(zip(("D", "k", "a", "eps", "gamma"), vals)))
         return fac
     factors = [factor_dict(f) for f in (pl.get("model_factors", [[1, 1]]) if not a.quick else [{"D": 1.0, "k": 1.0, "a": 1.0, "eps": 1.0, "gamma": 1.0}])]
-    required_strength_factors = tuple(map(float, pl.get("required_strength_factors", [])))
+    required_strength_factors = tuple(map(float, pl.get("strength_factors", [])))
     print(f"{len(scen)} retrospective scenarios (data through t_obs={d.t_obs:g} s) | largest |delta| = {dmax:.1f} s (not used to choose S) | pre-declared S = {S:g} s | model factors {factors} | random plant onset shift {onset_shift:+.2f} s")
     p_obs = float(nom.at(d.t_obs)); models = {}
     def cases_for(Sx):

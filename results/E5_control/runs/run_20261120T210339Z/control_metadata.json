@@ -1,0 +1,70 @@
+{
+  "args": {
+    "config": "configs/control.yaml",
+    "model_config": "configs/model_default.yaml",
+    "master_config": "configs/config.yaml",
+    "reconstruction": "outputs/inverse/latest/reconstruction.npz",
+    "event_estimate": "outputs/inverse/latest/event_estimate.json",
+    "out": null,
+    "no_event": false,
+    "quick": false,
+    "no_mismatch": false,
+    "confirm_2d": true,
+    "tradeoff": false,
+    "allow_solver_mismatch": false
+  },
+  "notes": [
+    "git working tree is NOT clean: results are not reproducible from the commit alone",
+    "RETROSPECTIVE sensing: Member 5 fits use the whole record; event scenarios use the arrival at target x",
+    "one robust plan (S = 20 s, model factors [(1.0, 1.0), (0.9, 1.0), (1.1, 1.0)]) shifted by each estimate; plant cases [[1, 1], [0.9, 1], [1.1, 1], [1, 0.9], [1, 1.1]]",
+    "control is a STRIPE uniform in y (the simulated wave is uniform in y); a localised 2D Gaussian cannot stop a planar wave"
+  ],
+  "solver_check_relL2": 0.0,
+  "initial_state": "Member 3 solver (1D) u[0]",
+  "timing_window_s": [
+    -35.0,
+    30.0
+  ],
+  "n_failed_fits": {
+    "1e-09": 0,
+    "1e-08": 0,
+    "1e-07": 0
+  },
+  "plan": {
+    "xc": 13.700987606657328,
+    "ts": 192.33228803144954,
+    "dur": 117.19243705436385,
+    "g0": 0.009406474038597899,
+    "halfwidth_s": 20.0,
+    "J_plan": 1.0382961411030843e-06
+  },
+  "confirm_2d": {
+    "peak_ratio_protected_2d": 3.9916712375735836e-05,
+    "min_over_y_ratio": 3.9916712375735836e-05,
+    "max_over_y_ratio": 3.9916712375735836e-05,
+    "blocked_2d": true
+  },
+  "seconds_total": 417.73809599876404,
+  "inputs": {
+    "model": "D:\\CUFE\\PDE\\Sense And Stop\\configs\\model_default.yaml",
+    "reconstruction": "D:\\CUFE\\PDE\\Sense And Stop\\outputs\\inverse\\run_20261120_214259\\reconstruction.npz",
+    "event": "D:\\CUFE\\PDE\\Sense And Stop\\outputs\\inverse\\run_20261120_214259\\event_estimate.json"
+  },
+  "hashes": {
+    "model": "37bfad0a025583e2",
+    "reconstruction": "9478f5e2c5128f3d",
+    "event": "48e848d191ae5941"
+  },
+  "versions": {
+    "python": "3.13.9",
+    "numpy": "2.2.6",
+    "scipy": "1.16.2",
+    "pandas": "2.3.3",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "git": {
+    "commit": "668576348bb995aa43d34148030908b4171732d6",
+    "status": "D A_matrix.npz\n D H_matrix.npz\n M configs/control.yaml\n D flat_patch.npz\n D noise_2s_7files_clean.npz\n D noise_2s_backup.npz\n D noise_cov.npz\n M src/control/__init__.py\n M src/control/events.py\n M src/control/model.py\n M src/control/objective.py\n M src/control/run_control.py\n M src/control/search.py\n?? scripts/bench_control.py\n?? scripts/convert_recon.py\n?? scripts/print_control_results.py\n?? tests/test_events.py"
+  },
+  "hypothetical": "control is a hypothetical numerical study; no clinical claim"
+}
