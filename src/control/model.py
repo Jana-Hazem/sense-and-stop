@@ -15,14 +15,9 @@ import numpy as np, yaml
 @dataclass
 class Model:
     D: float; k: float; a: float; eps: float; gamma: float
-    def scaled(self, D=None, k=None, a=None, eps=None, gamma=None, **kwargs):
+    def scaled(self, D=1.0, k=1.0, a=1.0, eps=1.0, gamma=1.0):
         """Return a multiplicatively perturbed plant without changing self."""
-        d_val = kwargs.get("d", kwargs.get("D", D if D is not None else 1.0))
-        k_val = kwargs.get("k", kwargs.get("K", k if k is not None else 1.0))
-        a_val = kwargs.get("a", kwargs.get("A", a if a is not None else 1.0))
-        eps_val = kwargs.get("eps", kwargs.get("EPS", eps if eps is not None else 1.0))
-        gam_val = kwargs.get("gamma", kwargs.get("gam", kwargs.get("GAM", gamma if gamma is not None else 1.0)))
-        return Model(self.D * float(d_val), self.k * float(k_val), self.a * float(a_val), self.eps * float(eps_val), self.gamma * float(gam_val))
+        return Model(self.D * D, self.k * k, self.a * a, self.eps * eps, self.gamma * gamma)
 
 
 @dataclass

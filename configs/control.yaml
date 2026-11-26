@@ -38,12 +38,18 @@ estimation:
   min_points: 3
 planning:                    # the ONE robust plan must block the wave for all pre-declared cases
   timing_halfwidth_s: 25.0   # fixed before evaluation; never derived from evaluated errors
-  model_factors:             # 5 cases, not 9
+  # Design envelope, declared before the run.  These are design cases rather
+  # than independent validation cases; the evaluation envelope is nested in it.
+  model_factors:
     - {D: 1.0, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
     - {D: 0.9, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
     - {D: 1.1, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
     - {D: 1.0, k: 0.9, a: 1.0, eps: 1.0, gamma: 1.0}
     - {D: 1.0, k: 1.1, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 0.85, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.15, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 0.75, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.25, gamma: 1.0}
   strength_factors: [0.5, 0.75]
   tradeoff_halfwidths_s: [0, 5, 10, 20, 30]       # used with --tradeoff
 evaluation:
@@ -64,9 +70,9 @@ robustness:
   tolerance_s: auto          # auto = planned half-width S; blocked_frac_timing = fraction blocked for shifts within +-tolerance
 search:
   seed: 0
-  seeds: [0, 1, 2]
-  popsize: 6
-  maxiter: 20
+  seeds: [0, 1, 2, 3, 4]
+  popsize: 10
+  maxiter: 80
   tol: 1.0e-3
   polish_maxiter: 30
   polish_g0_rtol: 0.01

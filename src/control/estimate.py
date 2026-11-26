@@ -42,6 +42,11 @@ def delta_from_rec(rec, x, t, nom, t_obs, detect_frac, window, min_points):
     return dict(delta=t_obs - nom.time_of(p_hat), p_hat=p_hat, n_det=int(det.sum()))
 
 
-def delta_from_arrival(arr_est, a_nom):
-    """Arrival estimate at target_x; estimated timing shift from nominal: delta = arr_est - a_nom (no truth/plant leak)."""
-    return float(arr_est) - float(a_nom)
+def delta_from_arrival(arr_est, arr_truth_json, a_nom):
+    """Convert a retrospective arrival estimate into a nominal-clock offset.
+
+    The estimate is referenced only to the arrival truth carried in the event
+    file.  Do not use a plant arrival computed by the control study: that would
+    leak unavailable plant information into the estimator.
+    """
+    return arr_est - a_nom

@@ -1,0 +1,79 @@
+# E5 / Member 6B v3 - hypothetical numerical control study (no clinical meaning). Control = stripe g(x,t) = g0 * zone(x) * gate(t), uniform in y.
+#   u_t = D u_xx + k*(u(1-u)(u-a) - v) - g(x,t) u      (g = 0: identical to Member 3)
+output:
+  dir: results/E5_control/runs
+  quick_dir: results/E5_control/quick_smoke
+target:
+  x_mm: 18.0                 # only used if event_estimate.json has no target_x_mm
+event:
+  method_key: B
+plant:
+  D_factor: 1.0              # the "real" plant; the planner always uses the nominal model
+  k_factor: 1.0
+  a_factor: 1.0
+  eps_factor: 1.0
+  gamma_factor: 1.0
+  onset_seed: 20261124       # fixed seed makes the random onset shift reproducible
+  onset_shift_s: [-10.0, 10.0]
+protected_region: {x_min: 20.0, x_max: 28.0}
+intervention:
+  width_mm: 3.0
+  edge_mm: 0.5
+  ramp_s: 5.0
+  margin_front_mm: 1.0
+  margin_protect_mm: 0.5
+bounds:
+  t_obs_s: 150.0
+  start_max_s: null
+  duration_s: [10.0, 200.0]
+  strength_per_s: [0.0, 2.0]
+objective:
+  damage_exponent: 2.0
+  effort_weight: 0.1
+  block_fraction: 0.1        # peak in protected region < 10% of uncontrolled peak = "blocked"
+  extinct_u: 0.1             # end-of-run max u over the entire domain must also be below this
+estimation:
+  detect_fraction: 0.3
+  front_window_s: 60.0
+  min_points: 3
+planning:                    # the ONE robust plan must block the wave for all pre-declared cases
+  timing_halfwidth_s: 25.0   # fixed before evaluation; never derived from evaluated errors
+  # Design envelope, declared before the run.  These are design cases rather
+  # than independent validation cases; the evaluation envelope is nested in it.
+  model_factors:
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 0.9, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.1, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 0.9, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.1, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 0.85, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.15, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 0.75, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.25, gamma: 1.0}
+  strength_factors: [0.5, 0.75]
+  tradeoff_halfwidths_s: [0, 5, 10, 20, 30]       # used with --tradeoff
+evaluation:
+  plant_cases:
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 0.9, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.1, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 0.9, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.1, a: 1.0, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 0.9, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.1, eps: 1.0, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 0.8, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.2, gamma: 1.0}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.0, gamma: 0.9}
+    - {D: 1.0, k: 1.0, a: 1.0, eps: 1.0, gamma: 1.1}
+robustness:
+  timing_shifts_s: [-40, -35, -30, -25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30, 35, 40]
+  tolerance_s: auto          # auto = planned half-width S; blocked_frac_timing = fraction blocked for shifts within +-tolerance
+search:
+  seed: 0
+  seeds: [0, 1, 2, 3, 4]
+  popsize: 10
+  maxiter: 80
+  tol: 1.0e-3
+  polish_maxiter: 30
+  polish_g0_rtol: 0.01
+  dt_target_s: 0.5
